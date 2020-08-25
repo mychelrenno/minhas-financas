@@ -1,5 +1,7 @@
 package br.com.minhasFinancas.service;
 
+import java.util.Optional;
+
 import br.com.minhasFinancas.model.entity.Usuario;
 
 public interface UsuarioService {
@@ -10,5 +12,5 @@ public interface UsuarioService {
 	
 	void validarEmail(String email);
 	
-	
+	Optional<Usuario> finById(Long id);
 }
