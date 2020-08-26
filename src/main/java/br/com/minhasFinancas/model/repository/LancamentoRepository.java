@@ -11,7 +11,7 @@ import br.com.minhasFinancas.model.enums.TipoLancamento;
 
 public interface LancamentoRepository extends JpaRepository<Lancamento, Long>{
 
-	// sql do tipo JPQL
+	// sql do tipo JPQL (a consulta deve seguir o padrão de nomes e atributos iguais das classes)
 	@Query(value = " select sum(l.valor) from Lancamento l "
 			+ "join l.usuario u "
 			+ "where u.id = :idUsuario and l.tipo = :tipo "
