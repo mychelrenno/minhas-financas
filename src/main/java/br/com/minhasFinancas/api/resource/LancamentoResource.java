@@ -15,14 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.minhasFinancas.api.dto.AtualizaStatusDTO;
 import br.com.minhasFinancas.api.dto.LancamentoDTO;
 import br.com.minhasFinancas.exception.RegraNegocioException;
 import br.com.minhasFinancas.model.entity.Lancamento;
 import br.com.minhasFinancas.model.entity.Usuario;
+import br.com.minhasFinancas.model.enums.StatusLancamento;
 import br.com.minhasFinancas.model.enums.TipoLancamento;
 import br.com.minhasFinancas.service.LancamentoService;
 import br.com.minhasFinancas.service.UsuarioService;
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/lancamentos")
@@ -35,6 +36,19 @@ public class LancamentoResource {
 	public LancamentoResource(LancamentoService service, UsuarioService usuarioService) {
 		this.service = service;
 		this.usuarioService = usuarioService;
+	}
+	
+	@PutMapping("{id}/atualiza-status")
+	public ResponseEntity atualizarStatus( @PathVariable Long id, @RequestBody AtualizaStatusDTO dto ) {
+		return service.findById(id).map( entity -> {
+			StatusLancamento statusSelecionado = StatusLancamento.valueOf(dto.getStatus());
+			if (statusSelecionado == null) {
+				ResponseEntity.badRequest().body("Não foi possível atualizar o status do lançamento, envie um status válido.");
+			}
+			entity.setStatus(statusSelecionado);
+			service.atualizar(entity);
+			return ResponseEntity.ok(entity);
+		}).orElseGet( () -> new ResponseEntity("Lançamento não encontrado na base de dados.", HttpStatus.BAD_REQUEST) );
 	}
 	
 	@GetMapping
@@ -74,7 +88,7 @@ public class LancamentoResource {
 		}
 	}
 	
-	@PutMapping("{id}")
+	@PutMapping("/atualizar/{id}")
 	public ResponseEntity atualizar( @PathVariable Long id, @RequestBody LancamentoDTO dto) {
 		return service.findById(id).map( entity -> {
 			try {
@@ -101,6 +115,7 @@ public class LancamentoResource {
 	}
 	
 	private Lancamento converter(LancamentoDTO dto) {
+
 		Lancamento lancamento = new Lancamento();
 		lancamento.setId(dto.getId());
 		lancamento.setDescricao(dto.getDescricao());
@@ -108,11 +123,16 @@ public class LancamentoResource {
 		lancamento.setMes(dto.getMes());
 		lancamento.setValor(dto.getValor());
 		
-		Usuario usuario = usuarioService.finById(dto.getId())
+		Usuario usuario = usuarioService.finById(dto.getUsuario())
 				.orElseThrow( () -> new RegraNegocioException("Usuário não encontra para o id informado."));
 		
 		lancamento.setUsuario(usuario);
-		lancamento.setTipo(TipoLancamento.valueOf(dto.getTipo()));
+		if (dto.getTipo() != null) {
+			lancamento.setTipo(TipoLancamento.valueOf(dto.getTipo()));
+		}
+		if (dto.getStatus() != null) {
+			lancamento.setStatus(StatusLancamento.valueOf(dto.getStatus()));
+		}
 		
 		return lancamento;
 	}

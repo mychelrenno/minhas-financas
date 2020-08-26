@@ -1,5 +1,6 @@
 package br.com.minhasFinancas.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,4 +22,6 @@ public interface LancamentoService {
 	void validar(Lancamento lancamento);
 	
 	Optional<Lancamento> findById(Long id);
+	
+	BigDecimal obterSaldoPorUsuario(Long id);
 }
