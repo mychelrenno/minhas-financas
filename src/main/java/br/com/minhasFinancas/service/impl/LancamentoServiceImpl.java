@@ -72,7 +72,7 @@ public class LancamentoServiceImpl implements LancamentoService {
 		if (lancamento.getDescricao() == null || lancamento.getDescricao().trim().equals("")) {
 			throw new RegraNegocioException("Informe uma descrição válida.");
 		}
-		if (lancamento.getMes() == null || lancamento.getMes() < 1 && lancamento.getMes() > 12) {
+		if (lancamento.getMes() == null || (lancamento.getMes() < 1 || lancamento.getMes() > 12)) {
 			throw new RegraNegocioException("Informe um mês válido.");
 		}
 		if (lancamento.getAno() == null || lancamento.getAno().toString().length() != 4) {
@@ -90,7 +90,7 @@ public class LancamentoServiceImpl implements LancamentoService {
 	}
 
 	@Override
-	public Optional<Lancamento> findById(Long id) {
+	public Optional<Lancamento> buscarPorId(Long id) {
 		return repository.findById(id);
 	}
 

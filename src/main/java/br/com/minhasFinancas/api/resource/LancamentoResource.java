@@ -40,7 +40,7 @@ public class LancamentoResource {
 	
 	@PutMapping("{id}/atualiza-status")
 	public ResponseEntity atualizarStatus( @PathVariable Long id, @RequestBody AtualizaStatusDTO dto ) {
-		return service.findById(id).map( entity -> {
+		return service.buscarPorId(id).map( entity -> {
 			StatusLancamento statusSelecionado = StatusLancamento.valueOf(dto.getStatus());
 			if (statusSelecionado == null) {
 				ResponseEntity.badRequest().body("Não foi possível atualizar o status do lançamento, envie um status válido.");
@@ -90,7 +90,7 @@ public class LancamentoResource {
 	
 	@PutMapping("/atualizar/{id}")
 	public ResponseEntity atualizar( @PathVariable Long id, @RequestBody LancamentoDTO dto) {
-		return service.findById(id).map( entity -> {
+		return service.buscarPorId(id).map( entity -> {
 			try {
 				Lancamento lancamento = converter(dto);
 				lancamento.setId(entity.getId());
@@ -104,7 +104,7 @@ public class LancamentoResource {
 	
 	@DeleteMapping("{id}")
 	public ResponseEntity deletar ( @PathVariable("id") Long id ) {
-		return service.findById(id).map( entity -> {
+		return service.buscarPorId(id).map( entity -> {
 			try {
 				service.deletar(entity);
 				return new ResponseEntity( HttpStatus.NO_CONTENT );
