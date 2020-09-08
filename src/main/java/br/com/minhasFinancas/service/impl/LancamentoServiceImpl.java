@@ -90,15 +90,15 @@ public class LancamentoServiceImpl implements LancamentoService {
 	}
 
 	@Override
-	public Optional<Lancamento> buscarPorId(Long id) {
+	public Optional<Lancamento> obterPorId(Long id) {
 		return repository.findById(id);
 	}
 
 	@Override
 	@Transactional(readOnly = true) // será aberto uma transação apenas para leitura
 	public BigDecimal obterSaldoPorUsuario(Long id) {
-		BigDecimal receitas = repository.obterSaldoPorTipoLancamentoEUsuario(id, TipoLancamento.RECEITA);
-		BigDecimal despesas = repository.obterSaldoPorTipoLancamentoEUsuario(id, TipoLancamento.DESPESA);
+		BigDecimal receitas = repository.obterSaldoPorTipoLancamentoEUsuario(id, TipoLancamento.RECEITA, StatusLancamento.EFETIVADO);
+		BigDecimal despesas = repository.obterSaldoPorTipoLancamentoEUsuario(id, TipoLancamento.DESPESA, StatusLancamento.EFETIVADO);
 		
 		if (receitas == null) {
 			receitas = BigDecimal.ZERO;

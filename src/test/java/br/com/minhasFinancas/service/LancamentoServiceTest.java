@@ -164,7 +164,7 @@ public class LancamentoServiceTest {
 		
 		Mockito.when( repository.findById(id) ).thenReturn( Optional.of(lancamento) );
 		//execução
-		Optional<Lancamento> resultado = service.buscarPorId(id);
+		Optional<Lancamento> resultado = service.obterPorId(id);
 		
 		//validação
 		Assertions.assertThat( resultado.isPresent() ).isTrue();
@@ -181,7 +181,7 @@ public class LancamentoServiceTest {
 		
 		Mockito.when( repository.findById(id) ).thenReturn( Optional.empty() );
 		//execução
-		Optional<Lancamento> resultado = service.buscarPorId(id);
+		Optional<Lancamento> resultado = service.obterPorId(id);
 		
 		//validação
 		Assertions.assertThat( resultado.isPresent() ).isFalse();
