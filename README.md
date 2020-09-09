@@ -1,4 +1,4 @@
-# minhas-financas
+# minhas-financas-api
 Projeto criado com intuito de estudar spring boot
 
 Tecnologias utilizadas:
